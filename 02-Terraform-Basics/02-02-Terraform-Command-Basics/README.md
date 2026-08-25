@@ -1,80 +1,69 @@
-# Terraform Command Basics
+# Terraform CLI Command Basics
 
-## Step-01: Introduction
-- Understand basic Terraform Commands
-  - terraform init
-  - terraform validate
-  - terraform plan
-  - terraform apply
-  - terraform destroy      
+Terraform's core workflow is:
 
-## Step-02: Review terraform manifest for EC2 Instance
-- **Pre-Conditions-1:** Ensure you have **default-vpc** in that respective region
-- **Pre-Conditions-2:** Ensure AMI you are provisioning exists in that region if not update AMI ID 
-- **Pre-Conditions-3:** Verify your AWS Credentials in **$HOME/.aws/credentials**
-```t
-# Terraform Settings Block
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      #version = "~> 3.21" # Optional but recommended in production
-    }
-  }
-}
-
-# Provider Block
-provider "aws" {
-  profile = "default" # AWS Credentials Profile configured on your local desktop terminal  $HOME/.aws/credentials
-  region  = "us-east-1"
-}
-
-# Resource Block
-resource "aws_instance" "ec2demo" {
-  ami           = "ami-04d29b6f966df1537" # Amazon Linux in us-east-1, update as per your region
-  instance_type = "t2.micro"
-}
+```text
+init -> fmt -> validate -> plan -> apply -> verify -> destroy
 ```
 
-## Step-03: Terraform Core Commands
-```t
-# Initialize Terraform
+## Essential commands
+
+```bash
+terraform version
+terraform fmt -recursive
 terraform init
-
-# Terraform Validate
 terraform validate
-
-# Terraform Plan to Verify what it is going to create / update / destroy
 terraform plan
-
-# Terraform Apply to Create EC2 Instance
-terraform apply 
-```
-
-## Step-04: Verify the EC2 Instance in AWS Management Console
-- Go to AWS Management Console -> Services -> EC2
-- Verify newly created EC2 instance
-
-
-
-## Step-05: Destroy Infrastructure
-```t
-# Destroy EC2 Instance
+terraform apply
+terraform show
+terraform output
 terraform destroy
-
-# Delete Terraform files 
-rm -rf .terraform*
-rm -rf terraform.tfstate*
 ```
 
-## Step-08: Conclusion
-- Re-iterate what we have learned in this section
-- Learned about Important Terraform Commands
-  - terraform init
-  - terraform validate
-  - terraform plan
-  - terraform apply
-  - terraform destroy     
+### Inspect before changing infrastructure
 
+```bash
+terraform plan
+terraform plan -out=tfplan
+terraform show tfplan
+```
 
+Treat saved plan files as sensitive artifacts and do not commit them to Git.
 
+### Refresh and state
+
+Modern Terraform automatically reconciles state as part of planning/applying. Use state commands deliberately:
+
+```bash
+terraform state list
+terraform state show <address>
+```
+
+Do not edit state JSON manually. Use supported state commands or migration workflows.
+
+## Initialization
+
+`terraform init` downloads providers/modules and initializes the backend. Re-run it after changing provider/module/backend configuration.
+
+Keep `.terraform.lock.hcl` in source control.
+
+## Validation
+
+```bash
+terraform fmt -check -recursive
+terraform validate
+```
+
+Add security/static analysis in CI for shared repositories.
+
+## Cleanup
+
+```bash
+terraform plan -destroy
+terraform destroy
+```
+
+## References
+
+- [Terraform CLI](https://developer.hashicorp.com/terraform/cli)
+- [Terraform command reference](https://developer.hashicorp.com/terraform/cli/commands)

@@ -1,77 +1,22 @@
-# Design AWS VPC using AWS Management Console
+# VPC Using the AWS Management Console
 
-## Step-01: Introduction
-- Create VPC
-- Create Public and Private Subnets
-- Create Internet Gateway and Associate to VPC
-- Create NAT Gateway in Public Subnet
-- Create Public Route Table, Add Public Route via Internet Gateway and Associate Public Subnet
-- Create Private Route Table, Add Private Route via NAT Gateway and Associate Private Subnet
+This lab teaches VPC networking visually before reproducing the same architecture with Terraform.
 
-## Step-02: Create VPC
-- **Name:** my-manual-vpc
-- **IPv4 CIDR Block:** 10.0.0.0/16
-- Rest all defaults
-- Click on **Create VPC**
+## Build and verify
 
-## Step-03: Create Subnets
-### Step-03-01: Public Subnet
-- **VPC ID:** my-manual-vpc
-- **Subnet Name::** my-public-subnet-1
-- **Availability zone:** us-east-1a
-- **IPv4 CIDR Block:** 10.0.1.0/24
+Create the VPC, subnets, route tables, gateway associations and security controls through the AWS console. Record the CIDR ranges and Availability Zones you select because they become Terraform inputs in the next lesson.
 
-### Step-03-02: Private Subnet
-- **Subnet Name::** my-private-subnet-1
-- **Availability zone:** us-east-1a
-- **IPv4 CIDR Block:** 10.0.101.0/24
-- Click on **Create Subnet**
+## Modern guidance
 
-## Step-04: Create Internet Gateway and Associate it to VPC
-- **Name Tag:** my-igw
-- Click on **Create Internet Gateway**
-- Click on Actions -> Attach to VPC -> my-manual-vpc
+- Use private subnets for application and database workloads.
+- Use public subnets only for resources that genuinely need public ingress/egress.
+- Avoid broad security-group ingress rules.
+- Plan CIDR ranges so they do not overlap with connected networks.
+- Tag resources consistently.
 
-## Step-05: Create NAT Gateway
-- **Name:** my-nat-gateway
-- **Subnet:** my-public-subnet-1
-- **Allocate Elastic Ip:** click on that
-- Click on **Create NAT Gateway**
+After completing the console exercise, repeat the design in `06-02-AWS-VPC-using-Terraform` so the infrastructure becomes repeatable and reviewable.
 
-## Step-06: Create Public Route Table and Create Routes and Associate Subnets
-### Step-06-01: Create Public Route Table
-- **Name tag:** my-public-route-table
-- **vpc:** my-manual-vpc
-- Click on **Create**
-### Step-06-02: Create Public Route in newly created Route Table
-- Click on **Add Route**
-- **Destination:** 0.0.0.0/0
-- **Target:** my-igw
-- Click on **Save Route**
-### Step-06-03: Associate Public Subnet 1 in Route Table
-- Click on **Edit Subnet Associations**
-- Select **my-public-subnet-1**
-- Click on **Save**
+## References
 
-
-## Step-07: Create Private Route Table and Create Routes and Associate Subnets
-### Step-07-01: Create Private Route Table
-- **Name tag:** my-private-route-table
-- **vpc:** my-manual-vpc
-- Click on **Create**
-### Step-07-02: Create Private Route in newly created Route Table
-- Click on **Add Route**
-- **Destination:** 0.0.0.0/0
-- **Target:** my-nat-gateway
-- Click on **Save Route**
-### Step-07-03: Associate Private Subnet 1 in Route Table
-- Click on **Edit Subnet Associations**
-- Select **my-private-subnet-1**
-- Click on **Save**
-
-## Step-08: Clean-Up
-- Delete `my-nat-gateway`
-- Wait till NAT Gateway is deleted
-- Delete `my-manual-vpc`
-
-
+- [Amazon VPC User Guide](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+- [VPC security](https://docs.aws.amazon.com/vpc/latest/userguide/security.html)

@@ -1,19 +1,39 @@
-/ADDITIONAL-TOPICS
-FUTURE-TOPICS
-#.gitignore
-
-# macOS Files
+# OS / editor files
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
 
-# Ignore .sh files
-#*.sh
+# Terraform working directory
+.terraform/
 
-# Terraform Files and Folders
-.terraform
+# Terraform state (state may contain sensitive information)
 *.tfstate
-*.tfstate.backup
-#.terraform.lock.hcl
-#*.tfvars
+*.tfstate.*
 
-# Ignore .pem files
-#*.pem
+# Terraform variable files - keep examples such as *.tfvars.example tracked
+*.tfvars
+*.tfvars.json
+
+# Terraform plan output
+*.tfplan
+plan.out
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Sensitive/local credentials and keys
+*.pem
+*.key
+.aws/
+credentials
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Optional local course scratch directories
+/ADDITIONAL-TOPICS
+/FUTURE-TOPICS
